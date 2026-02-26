@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – EduLearn</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="hero-orb hero-orb-1" style="position:fixed"></div>
+    <div class="hero-orb hero-orb-2" style="position:fixed"></div>
+
+    <div class="auth-page">
+        <div class="auth-card glass">
+            <div class="auth-logo">
+                <div class="logo-icon">🎓</div>
+                <span>Edu<span class="text-gradient">Learn</span></span>
+            </div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to continue your learning journey</p>
+
+            <div class="alert alert-danger" id="errorMsg"></div>
+            <div class="alert alert-success" id="successMsg"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="you@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password"
+                        required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="loginBtn" style="margin-top:8px;">
+                    Sign In →
+                </button>
+            </form>
+
+            <div class="form-footer">
+                New to EduLearn? <a href="register.html">Create an account</a>
+            </div>
+            <div style="text-align:center;margin-top:12px;">
+                <a href="index.html" style="color:var(--text-muted);font-size:0.82rem;">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        redirectIfLoggedIn();
+
+        function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.classList.add('show'); }
+        function showSuccess(msg) { const el = document.getElementById('successMsg'); el.textContent = msg; el.classList.add('show'); }
+        function hideAlerts() { document.querySelectorAll('.alert').forEach(e => e.classList.remove('show')); }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlerts();
+            const btn = document.getElementById('loginBtn');
+            btn.textContent = 'Signing in...'; btn.disabled = true;
+
+            try {
+                const res = await Auth.login({
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                });
+
+                setAuth(res.token, res.user);
+                showSuccess('Login successful! Redirecting...');
+
+                setTimeout(() => {
+                    if (res.user.role === 'student') window.location.href = 'dashboard.html';
+                    else if (res.user.role === 'faculty') window.location.href = 'faculty.html';
+                    else window.location.href = 'admin.html';
+                }, 800);
+            } catch (err) {
+                showError(err.message || 'Login failed. Check your credentials.');
+                btn.textContent = 'Sign In →'; btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register – EduLearn</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="hero-orb hero-orb-1" style="position:fixed"></div>
+    <div class="hero-orb hero-orb-2" style="position:fixed"></div>
+
+    <div class="auth-page">
+        <div class="auth-card glass" style="max-width:520px;">
+            <div class="auth-logo">
+                <div class="logo-icon">🎓</div>
+                <span>Edu<span class="text-gradient">Learn</span></span>
+            </div>
+            <h2>Create Account</h2>
+            <p class="subtitle">Join India's NEP-aligned learning platform</p>
+
+            <div class="alert alert-danger" id="errorMsg"></div>
+            <div class="alert alert-success" id="successMsg"></div>
+
+            <form id="registerForm">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Priya Sharma" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="role" class="form-control" onchange="toggleFields()">
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="you@example.com" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Min. 6 characters" required
+                        minlength="6" />
+                </div>
+
+                <!-- Student Field -->
+                <div class="form-group" id="studentIdGroup">
+                    <label>Student ID</label>
+                    <input type="text" id="studentId" class="form-control" placeholder="STU2024001" />
+                </div>
+
+                <!-- Faculty Field -->
+                <div class="form-group" id="departmentGroup" style="display:none;">
+                    <label>Department</label>
+                    <input type="text" id="department" class="form-control" placeholder="Computer Science" />
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn btn-primary btn-full" style="margin-top:8px;">
+                    Create Account →
+                </button>
+            </form>
+
+            <div class="form-footer">
+                Already have an account? <a href="login.html">Sign in</a>
+            </div>
+            <div style="text-align:center;margin-top:12px;">
+                <a href="index.html" style="color:var(--text-muted);font-size:0.82rem;">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        redirectIfLoggedIn();
+
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            document.getElementById('studentIdGroup').style.display = role === 'student' ? 'block' : 'none';
+            document.getElementById('departmentGroup').style.display = (role === 'faculty' || role === 'admin') ? 'block' : 'none';
+            if (role === 'admin') document.getElementById('department').placeholder = 'Administration';
+            else if (role === 'faculty') document.getElementById('department').placeholder = 'Computer Science';
+        }
+
+        function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.classList.add('show'); }
+        function showSuccess(msg) { const el = document.getElementById('successMsg'); el.textContent = msg; el.classList.add('show'); }
+        function hideAlerts() { document.querySelectorAll('.alert').forEach(e => e.classList.remove('show')); }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlerts();
+            const btn = document.getElementById('registerBtn');
+            btn.textContent = 'Creating account...'; btn.disabled = true;
+
+            const role = document.getElementById('role').value;
+            const body = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                role,
+            };
+            if (role === 'student') body.studentId = document.getElementById('studentId').value.trim();
+            if (role === 'faculty' || role === 'admin') body.department = document.getElementById('department').value.trim();
+
+            try {
+                const res = await Auth.register(body);
+                setAuth(res.token, res.user);
+                showSuccess('Account created! Redirecting to dashboard...');
+                setTimeout(() => {
+                    if (role === 'student') window.location.href = 'dashboard.html';
+                    else if (role === 'faculty') window.location.href = 'faculty.html';
+                    else window.location.href = 'admin.html';
+                }, 900);
+            } catch (err) {
+                showError(err.message || 'Registration failed. Please try again.');
+                btn.textContent = 'Create Account →'; btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

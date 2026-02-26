@@ -1,0 +1,12 @@
+{
+    "name": "edulearn-frontend",
+    "version": "1.0.0",
+    "description": "EduLearn – NEP Aligned Learning Platform Frontend",
+    "scripts": {
+        "dev": "live-server --port=3000 --host=localhost --open=index.html",
+        "start": "live-server --port=3000 --host=localhost --open=index.html"
+    },
+    "devDependencies": {
+        "live-server": "^1.2.2"
+    }
+}

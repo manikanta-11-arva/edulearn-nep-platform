@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard – EduLearn</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="dashboard-layout">
+
+        <!-- ── Sidebar ──────────────────────────────────────────── -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">🛡️</div>
+                <span>EduLearn</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Admin</div>
+                <div class="sidebar-link active" onclick="showSection('overview')"><span class="sidebar-icon">📊</span>
+                    Overview</div>
+                <div class="sidebar-link" onclick="showSection('courses')"><span class="sidebar-icon">📚</span> All
+                    Courses</div>
+
+                <div class="sidebar-section">People</div>
+                <div class="sidebar-link" onclick="showSection('students')"><span class="sidebar-icon">👨‍🎓</span>
+                    Students</div>
+                <div class="sidebar-link" onclick="showSection('faculty')"><span class="sidebar-icon">👨‍🏫</span>
+                    Faculty</div>
+
+                <div class="sidebar-section">Account</div>
+                <div class="sidebar-link" onclick="handleLogout()"><span class="sidebar-icon">🚪</span> Logout</div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar"
+                        style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">?</div>
+                    <div>
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ── Main ─────────────────────────────────────────────── -->
+        <main class="dashboard-main">
+
+            <!-- Overview -->
+            <div id="sec-overview">
+                <div class="dashboard-header">
+                    <h1>Admin <span class="text-gradient">Dashboard</span></h1>
+                    <p>Full platform overview and management</p>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Total Courses</div>
+                        <div class="stat-card-value text-gradient" id="stCourseCt">–</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Total Students</div>
+                        <div class="stat-card-value text-gradient" id="stStudentCt">–</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Total Faculty</div>
+                        <div class="stat-card-value text-gradient" id="stFacultyCt">–</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Total Enrollments</div>
+                        <div class="stat-card-value text-gradient" id="stEnrollCt">–</div>
+                    </div>
+                </div>
+
+                <!-- Recent Courses -->
+                <div class="panel glass" style="margin-top:24px;">
+                    <div class="panel-header"><span class="panel-title">📚 Recent Courses</span></div>
+                    <div id="overviewCourses">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Courses -->
+            <div id="sec-courses" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>All <span class="text-gradient">Courses</span></h1>
+                    <p>Every course on the platform</p>
+                </div>
+                <div id="allCoursesList">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Students -->
+            <div id="sec-students" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>All <span class="text-gradient">Students</span></h1>
+                    <p>Registered students on the platform</p>
+                </div>
+                <div id="studentsList">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Faculty -->
+            <div id="sec-faculty" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>All <span class="text-gradient">Faculty</span></h1>
+                    <p>Faculty members on the platform</p>
+                </div>
+                <div id="facultyList">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const user = requireAuth(['admin']);
+        if (!user) throw new Error('redirect');
+
+        document.getElementById('sidebarAvatar').textContent = user.name[0].toUpperCase();
+        document.getElementById('sidebarName').textContent = user.name;
+
+        const sections = ['overview', 'courses', 'students', 'faculty'];
+        function showSection(id) {
+            sections.forEach(s => document.getElementById(`sec-${s}`).style.display = s === id ? 'block' : 'none');
+            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+            event?.target?.closest('.sidebar-link')?.classList.add('active');
+            if (id === 'students') loadStudents();
+            if (id === 'faculty') loadFaculty();
+            if (id === 'courses') loadAllCourses();
+        }
+        function handleLogout() { clearAuth(); window.location.href = 'index.html'; }
+
+        // ── Overview ──────────────────────────────────────────────
+        async function loadOverview() {
+            try {
+                const [coursesRes, studentsRes, facultyRes] = await Promise.all([
+                    Courses.list('limit=100'),
+                    Users.students(),
+                    Users.faculty(),
+                ]);
+                document.getElementById('stCourseCt').textContent = coursesRes.count ?? coursesRes.data.length;
+                document.getElementById('stStudentCt').textContent = studentsRes.count;
+                document.getElementById('stFacultyCt').textContent = facultyRes.count;
+                document.getElementById('stEnrollCt').textContent = '–';
+
+                const recent = coursesRes.data.slice(0, 10);
+                const el = document.getElementById('overviewCourses');
+                el.innerHTML = recent.length === 0
+                    ? `<p style="text-align:center;padding:24px;color:var(--text-muted)">No courses yet.</p>`
+                    : `<table class="grade-table"><thead><tr><th>Course</th><th>Code</th><th>Faculty</th><th>Credits</th><th>Category</th><th>Semester</th></tr></thead><tbody>
+                    ${recent.map(c => `<tr>
+                        <td><strong>${c.name}</strong></td>
+                        <td style="color:var(--text-muted)">${c.courseCode}</td>
+                        <td>${c.faculty?.name || '–'}</td>
+                        <td>⭐ ${c.credits}</td>
+                        <td style="text-transform:capitalize">${c.category || 'core'}</td>
+                        <td>${c.semester || '–'}</td>
+                    </tr>`).join('')}
+                    </tbody></table>`;
+            } catch (e) { console.error(e); }
+        }
+
+        // ── All Courses ───────────────────────────────────────────
+        async function loadAllCourses() {
+            const el = document.getElementById('allCoursesList');
+            el.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await Courses.list('limit=100');
+                el.innerHTML = res.data.length === 0
+                    ? `<div class="panel glass"><p style="text-align:center;padding:32px;color:var(--text-muted)">No courses found.</p></div>`
+                    : `<div class="panel glass">
+                        <div class="panel-header"><span class="panel-title">📚 All Courses (${res.data.length})</span></div>
+                        <table class="grade-table"><thead><tr><th>#</th><th>Course</th><th>Code</th><th>Faculty</th><th>Credits</th><th>Category</th><th>Semester</th></tr></thead><tbody>
+                        ${res.data.map((c, i) => `<tr>
+                            <td style="color:var(--text-muted)">${i + 1}</td>
+                            <td><strong>${c.name}</strong></td>
+                            <td style="color:var(--text-muted)">${c.courseCode}</td>
+                            <td>${c.faculty?.name || '–'}</td>
+                            <td>⭐ ${c.credits}</td>
+                            <td style="text-transform:capitalize">${c.category || 'core'}</td>
+                            <td>${c.semester || '–'}</td>
+                        </tr>`).join('')}
+                        </tbody></table></div>`;
+            } catch (e) { el.innerHTML = `<p style="color:var(--danger)">${e.message}</p>`; }
+        }
+
+        // ── Students List ─────────────────────────────────────────
+        async function loadStudents() {
+            const el = document.getElementById('studentsList');
+            el.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await Users.students();
+                el.innerHTML = res.data.length === 0
+                    ? `<div class="panel glass"><p style="text-align:center;padding:32px;color:var(--text-muted)">No students found.</p></div>`
+                    : `<div class="panel glass">
+                        <div class="panel-header"><span class="panel-title">👨‍🎓 Students (${res.count})</span></div>
+                        <table class="grade-table"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Student ID</th><th>Credits</th><th>Level</th><th>Status</th><th>Joined</th></tr></thead><tbody>
+                        ${res.data.map((s, i) => `<tr>
+                            <td style="color:var(--text-muted)">${i + 1}</td>
+                            <td><strong>${s.name}</strong></td>
+                            <td style="color:var(--text-muted)">${s.email}</td>
+                            <td>${s.studentId || '–'}</td>
+                            <td>⭐ ${s.creditsEarned || 0}</td>
+                            <td style="text-transform:capitalize">${s.academicLevel || 'degree'}</td>
+                            <td><span style="color:${s.isActive ? 'var(--success, #22c55e)' : 'var(--danger)'}">● ${s.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td style="color:var(--text-muted);font-size:0.82rem">${new Date(s.createdAt).toLocaleDateString('en-IN')}</td>
+                        </tr>`).join('')}
+                        </tbody></table></div>`;
+            } catch (e) { el.innerHTML = `<p style="color:var(--danger)">${e.message}</p>`; }
+        }
+
+        // ── Faculty List ──────────────────────────────────────────
+        async function loadFaculty() {
+            const el = document.getElementById('facultyList');
+            el.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await Users.faculty();
+                el.innerHTML = res.data.length === 0
+                    ? `<div class="panel glass"><p style="text-align:center;padding:32px;color:var(--text-muted)">No faculty members found.</p></div>`
+                    : `<div class="panel glass">
+                        <div class="panel-header"><span class="panel-title">👨‍🏫 Faculty Members (${res.count})</span></div>
+                        <table class="grade-table"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Department</th><th>Status</th><th>Joined</th></tr></thead><tbody>
+                        ${res.data.map((f, i) => `<tr>
+                            <td style="color:var(--text-muted)">${i + 1}</td>
+                            <td><strong>${f.name}</strong></td>
+                            <td style="color:var(--text-muted)">${f.email}</td>
+                            <td>${f.department || '–'}</td>
+                            <td><span style="color:${f.isActive ? 'var(--success, #22c55e)' : 'var(--danger)'}">● ${f.isActive ? 'Active' : 'Inactive'}</span></td>
+                            <td style="color:var(--text-muted);font-size:0.82rem">${new Date(f.createdAt).toLocaleDateString('en-IN')}</td>
+                        </tr>`).join('')}
+                        </tbody></table></div>`;
+            } catch (e) { el.innerHTML = `<p style="color:var(--danger)">${e.message}</p>`; }
+        }
+
+        loadOverview();
+    </script>
+</body>
+
+</html>

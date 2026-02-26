@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Dashboard – EduLearn</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="dashboard-layout">
+
+        <!-- ── Sidebar ──────────────────────────────────────────── -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🏫</div>
+                <span>EduLearn</span>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Faculty</div>
+                <div class="sidebar-link active" onclick="showSection('overview')"><span class="sidebar-icon">📊</span>
+                    Overview</div>
+                <div class="sidebar-link" onclick="showSection('my-courses')"><span class="sidebar-icon">📚</span> My
+                    Courses</div>
+                <div class="sidebar-link" onclick="showSection('create-course')"><span class="sidebar-icon">➕</span>
+                    Create Course</div>
+                <div class="sidebar-link" onclick="showSection('grades')"><span class="sidebar-icon">🏆</span> Assign
+                    Grades</div>
+                <div class="sidebar-link" onclick="showSection('students')"><span class="sidebar-icon">👨‍🎓</span>
+                    Students</div>
+
+                <div class="sidebar-section">Account</div>
+                <div class="sidebar-link" onclick="handleLogout()"><span class="sidebar-icon">🚪</span> Logout</div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar"
+                        style="background:linear-gradient(135deg,#f59e0b,#ef4444)">?</div>
+                    <div>
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-role">Faculty</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ── Main ─────────────────────────────────────────────── -->
+        <main class="dashboard-main">
+
+            <!-- Overview -->
+            <div id="sec-overview">
+                <div class="dashboard-header">
+                    <h1>Faculty <span class="text-gradient">Dashboard</span></h1>
+                    <p id="deptLabel">Manage your courses, grades, and students</p>
+                </div>
+                <div class="stats-row" id="overviewStats">
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">My Courses</div>
+                        <div class="stat-card-value text-gradient" id="stCourseCt">–</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Total Students</div>
+                        <div class="stat-card-value text-gradient" id="stStudentCt">–</div>
+                    </div>
+
+                    <div class="stat-card glass">
+                        <div class="stat-card-label">Grades Assigned</div>
+                        <div class="stat-card-value text-gradient" id="stGradeCt">–</div>
+                    </div>
+                </div>
+                <div class="panel glass">
+                    <div class="panel-header"><span class="panel-title">📚 My Courses</span><button
+                            class="btn btn-primary btn-sm" onclick="showSection('create-course')">+ New Course</button>
+                    </div>
+                    <div id="overviewCourses">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Courses -->
+            <div id="sec-my-courses" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>My <span class="text-gradient">Courses</span></h1>
+                    <p>Courses you've created</p>
+                </div>
+                <div class="courses-grid" id="myCoursesGrid">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Create Course -->
+            <div id="sec-create-course" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>Create <span class="text-gradient">Course</span></h1>
+                    <p>Design a new NEP-aligned course</p>
+                </div>
+                <div class="panel glass" style="max-width:720px;">
+                    <div class="alert alert-danger" id="courseError"></div>
+                    <div class="alert alert-success" id="courseSuccess"></div>
+                    <form id="courseForm">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="form-group"><label>Course Name</label><input class="form-control" id="cName"
+                                    placeholder="Introduction to ML" required /></div>
+                            <div class="form-group"><label>Course Code</label><input class="form-control" id="cCode"
+                                    placeholder="CS302" required /></div>
+                        </div>
+                        <div class="form-group"><label>Description</label><textarea class="form-control" id="cDesc"
+                                rows="3" placeholder="Course description..." required
+                                style="resize:vertical"></textarea></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                            <div class="form-group"><label>Credits</label><input type="number" class="form-control"
+                                    id="cCredits" min="1" max="10" value="4" required /></div>
+                            <div class="form-group"><label>Semester</label><input type="number" class="form-control"
+                                    id="cSem" min="1" max="12" value="1" /></div>
+                            <div class="form-group"><label>Duration (weeks)</label><input type="number"
+                                    class="form-control" id="cDur" value="16" /></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="form-group"><label>Category</label>
+                                <select class="form-control" id="cCategory">
+                                    <option value="core">Core</option>
+                                    <option value="elective">Elective</option>
+                                    <option value="skill-enhancement">Skill Enhancement</option>
+                                    <option value="multidisciplinary">Multidisciplinary</option>
+                                    <option value="vocational">Vocational</option>
+                                    <option value="ability-enhancement">Ability Enhancement</option>
+                                    <option value="audit">Audit</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Level</label>
+                                <select class="form-control" id="cLevel">
+                                    <option value="degree">Degree</option>
+                                    <option value="diploma">Diploma</option>
+                                    <option value="certificate">Certificate</option>
+                                    <option value="postgraduate">Postgraduate</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>Skills (comma-separated)</label><input class="form-control"
+                                id="cSkills" placeholder="Python, Data Analysis, Machine Learning" /></div>
+                        <div class="form-group"><label>Modules (one per line: Title | Description)</label>
+                            <textarea class="form-control" id="cModules" rows="5" style="resize:vertical"
+                                placeholder="Module 1: Intro | Overview of concepts&#10;Module 2: Basics | Core fundamentals"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="courseSubmitBtn">Create Course →</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Grades -->
+            <div id="sec-grades" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>Assign <span class="text-gradient">Grades</span></h1>
+                    <p>Enter marks for enrolled students</p>
+                </div>
+                <div class="panel glass" style="max-width:600px;margin-bottom:24px;">
+                    <div class="alert alert-danger" id="gradeError"></div>
+                    <div class="alert alert-success" id="gradeSuccess"></div>
+                    <form id="gradeForm">
+                        <div class="form-group"><label>Student ID (MongoDB ID)</label><input class="form-control"
+                                id="gStudentId" placeholder="Enter student MongoDB _id" required /></div>
+                        <div class="form-group"><label>Course ID (MongoDB ID)</label><input class="form-control"
+                                id="gCourseId" placeholder="Enter course MongoDB _id" required /></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="form-group"><label>Marks (0–100)</label><input type="number"
+                                    class="form-control" id="gMarks" min="0" max="100" required /></div>
+                            <div class="form-group"><label>Assessment Type</label>
+                                <select class="form-control" id="gType">
+                                    <option value="final">Final</option>
+                                    <option value="internal">Internal</option>
+                                    <option value="external">External</option>
+                                    <option value="project">Project</option>
+                                    <option value="viva">Viva</option>
+                                    <option value="assignment">Assignment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>Remarks (optional)</label><input class="form-control"
+                                id="gRemarks" placeholder="Excellent performance..." /></div>
+                        <button type="submit" class="btn btn-primary" id="gradeSubmitBtn">Assign Grade →</button>
+                    </form>
+                </div>
+                <div class="panel glass">
+                    <div class="panel-header"><span class="panel-title">Grade Preview</span></div>
+                    <p style="color:var(--text-muted);font-size:0.88rem;">
+                        NEP 10-point grade scale: O≥90 (10) · A+≥85 (9) · A≥75 (8) · B+≥65 (7) · B≥55 (6) · C≥50 (5) ·
+                        P≥40 (4) · F&lt;40 (0)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Students -->
+            <div id="sec-students" style="display:none;">
+                <div class="dashboard-header">
+                    <h1>All <span class="text-gradient">Students</span></h1>
+                    <p>Students on the platform</p>
+                </div>
+                <div id="studentsList">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+
+
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const user = requireAuth(['faculty', 'admin']);
+        if (!user) throw new Error('redirect');
+
+        document.getElementById('sidebarAvatar').textContent = user.name[0].toUpperCase();
+        document.getElementById('sidebarName').textContent = user.name;
+        if (user.department) document.getElementById('deptLabel').textContent = `Department: ${user.department}`;
+
+        const sections = ['overview', 'my-courses', 'create-course', 'grades', 'students'];
+        function showSection(id) {
+            sections.forEach(s => document.getElementById(`sec-${s}`).style.display = s === id ? 'block' : 'none');
+            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+            event?.target?.closest('.sidebar-link')?.classList.add('active');
+            if (id === 'my-courses') loadMyCourses();
+            if (id === 'students') loadStudents();
+
+        }
+        function handleLogout() { clearAuth(); window.location.href = 'index.html'; }
+
+        // ── Overview ──────────────────────────────────────────────
+        async function loadOverview() {
+            try {
+                const [coursesRes, studentsRes] = await Promise.all([
+                    Courses.list('limit=50'),
+                    Users.students(),
+                ]);
+                const mine = coursesRes.data.filter(c => c.faculty?._id === user.id || c.faculty === user.id);
+                document.getElementById('stCourseCt').textContent = mine.length;
+                document.getElementById('stStudentCt').textContent = studentsRes.count;
+                document.getElementById('stGradeCt').textContent = '–';
+
+                const el = document.getElementById('overviewCourses');
+                el.innerHTML = mine.length === 0
+                    ? `<p style="text-align:center;padding:24px;color:var(--text-muted)">No courses yet. <button class="btn btn-primary btn-sm" onclick="showSection('create-course')">Create your first course</button></p>`
+                    : `<table class="grade-table"><thead><tr><th>Course</th><th>Code</th><th>Credits</th><th>Category</th><th>Semester</th></tr></thead><tbody>
+          ${mine.map(c => `<tr>
+            <td>${c.name}</td>
+            <td style="color:var(--text-muted)">${c.courseCode}</td>
+            <td>⭐ ${c.credits}</td>
+            <td>${c.category || 'core'}</td>
+            <td>${c.semester || '–'}</td>
+          </tr>`).join('')}
+          </tbody></table>`;
+            } catch (e) { console.error(e); }
+        }
+
+        // ── My Courses ────────────────────────────────────────────
+        async function loadMyCourses() {
+            const grid = document.getElementById('myCoursesGrid');
+            grid.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await Courses.list('limit=50');
+                const mine = res.data.filter(c => c.faculty?._id === user.id || c.faculty === user.id);
+                grid.innerHTML = mine.length === 0
+                    ? `<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1">No courses yet. <button class="btn btn-primary btn-sm" onclick="showSection('create-course')">Create one →</button></div>`
+                    : mine.map(c => `
+          <div class="course-card glass">
+            <div class="course-header"><span class="course-category">${c.category}</span><span class="course-credits">⭐ ${c.credits}</span></div>
+            <h3>${c.name}</h3><p>${c.description}</p>
+            <div class="course-skills">${(c.skills || []).slice(0, 3).map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>
+            <div class="course-footer">
+              <span style="font-size:0.8rem;color:var(--text-muted)">${c.modules?.length || 0} modules</span>
+              <button class="btn btn-danger btn-sm" onclick="deleteCourse('${c._id}')">Delete</button>
+            </div>
+          </div>`).join('');
+            } catch (e) { grid.innerHTML = `<p style="color:var(--danger)">${e.message}</p>`; }
+        }
+
+        async function deleteCourse(id) {
+            if (!confirm('Delete this course?')) return;
+            try { await Courses.delete(id); loadMyCourses(); loadOverview(); }
+            catch (e) { alert('❌ ' + e.message); }
+        }
+
+        // ── Create Course ─────────────────────────────────────────
+        document.getElementById('courseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.alert').forEach(el => el.classList.remove('show'));
+            const btn = document.getElementById('courseSubmitBtn');
+            btn.textContent = 'Creating...'; btn.disabled = true;
+
+            // Parse modules from textarea
+            const modulesRaw = document.getElementById('cModules').value.trim();
+            const modules = modulesRaw ? modulesRaw.split('\n').map((line, i) => {
+                const [title, description] = line.split('|').map(s => s.trim());
+                return { title: title || `Module ${i + 1}`, description: description || '', order: i + 1 };
+            }) : [];
+
+            // Parse skills
+            const skills = document.getElementById('cSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+
+            const body = {
+                name: document.getElementById('cName').value,
+                courseCode: document.getElementById('cCode').value.toUpperCase(),
+                description: document.getElementById('cDesc').value,
+                credits: Number(document.getElementById('cCredits').value),
+                semester: Number(document.getElementById('cSem').value),
+                durationWeeks: Number(document.getElementById('cDur').value),
+                category: document.getElementById('cCategory').value,
+                level: document.getElementById('cLevel').value,
+                skills, modules,
+            };
+
+            try {
+                await Courses.create(body);
+                document.getElementById('courseSuccess').textContent = '✅ Course created successfully!';
+                document.getElementById('courseSuccess').classList.add('show');
+                document.getElementById('courseForm').reset();
+                setTimeout(() => showSection('my-courses'), 1200);
+            } catch (err) {
+                document.getElementById('courseError').textContent = err.message;
+                document.getElementById('courseError').classList.add('show');
+            } finally { btn.textContent = 'Create Course →'; btn.disabled = false; }
+        });
+
+        // ── Assign Grade ──────────────────────────────────────────
+        document.getElementById('gradeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.alert').forEach(el => el.classList.remove('show'));
+            const btn = document.getElementById('gradeSubmitBtn');
+            btn.textContent = 'Assigning...'; btn.disabled = true;
+            try {
+                await Grades.assign({
+                    studentId: document.getElementById('gStudentId').value.trim(),
+                    courseId: document.getElementById('gCourseId').value.trim(),
+                    marksObtained: Number(document.getElementById('gMarks').value),
+                    assessmentType: document.getElementById('gType').value,
+                    remarks: document.getElementById('gRemarks').value,
+                });
+                document.getElementById('gradeSuccess').textContent = '✅ Grade assigned and academic record updated!';
+                document.getElementById('gradeSuccess').classList.add('show');
+                document.getElementById('gradeForm').reset();
+            } catch (err) {
+                document.getElementById('gradeError').textContent = err.message;
+                document.getElementById('gradeError').classList.add('show');
+            } finally { btn.textContent = 'Assign Grade →'; btn.disabled = false; }
+        });
+
+        // ── Students List ─────────────────────────────────────────
+        async function loadStudents() {
+            const el = document.getElementById('studentsList');
+            el.innerHTML = '<div class="spinner"></div>';
+            try {
+                const res = await Users.students();
+                el.innerHTML = `<div class="panel glass"><table class="grade-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Student ID</th><th>Credits</th><th>Level</th></tr></thead>
+        <tbody>${res.data.map(s => `<tr>
+          <td>${s.name}</td>
+          <td style="color:var(--text-muted)">${s.email}</td>
+          <td>${s.studentId || '–'}</td>
+          <td>⭐ ${s.creditsEarned || 0}</td>
+          <td style="text-transform:capitalize">${s.academicLevel || 'degree'}</td>
+        </tr>`).join('')}
+        </tbody></table></div>`;
+            } catch (e) { el.innerHTML = `<p style="color:var(--danger)">${e.message}</p>`; }
+        }
+
+        loadOverview();
+    </script>
+</body>
+
+</html>

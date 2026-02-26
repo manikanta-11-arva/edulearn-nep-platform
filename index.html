@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduLearn – NEP Aligned Learning Platform</title>
+  <meta name="description" content="EduLearn is a credit-based, modular, skill-focused online learning platform fully aligned with India's National Education Policy (NEP 2020)."/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">🎓</div>
+      <span>Edu<span class="text-gradient">Learn</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#courses" class="nav-link">Courses</a>
+      <a href="#nep" class="nav-link">NEP 2020</a>
+      <a href="#about" class="nav-link">About</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="btn btn-ghost">Login</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="badge">🇮🇳 NEP 2020 Aligned</span>
+      </div>
+      <h1>Learn Smarter.<br/><span class="text-gradient">Earn Credits.</span><br/>Shape Your Future.</h1>
+      <p>India's most advanced credit-based learning platform built for the National Education Policy. Choose your path, build real skills, and earn recognized qualifications.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-primary btn-lg">Start Learning Free →</a>
+        <a href="#courses" class="btn btn-outline btn-lg">Browse Courses</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><h3 id="statCourses">...</h3><p>Active Courses</p></div>
+        <div class="hero-stat"><h3 id="statStudents">...</h3><p>Students Enrolled</p></div>
+        <div class="hero-stat"><h3 id="statCredits">500+</h3><p>Credits Available</p></div>
+        <div class="hero-stat"><h3>NEP</h3><p>Fully Compliant</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ─────────────────────────────────────────────────── -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><h3 class="text-gradient">7</h3><p>NEP Features</p></div>
+      <div class="stat-item"><h3 class="text-gradient">10pt</h3><p>Grade Scale</p></div>
+      <div class="stat-item"><h3 class="text-gradient">ABC</h3><p>Credit Banking</p></div>
+      <div class="stat-item"><h3 class="text-gradient">4</h3><p>Exit Levels</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ──────────────────────────────────────────────── -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="badge" style="display:inline-flex;margin-bottom:14px;">✨ Platform Features</div>
+      <h2>Everything You Need to <span class="text-gradient">Succeed</span></h2>
+      <p>A complete learning ecosystem designed around the learner — modular, flexible, and skill-focused.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card glass">
+        <div class="feature-icon">📚</div>
+        <h3>Modular Courses</h3>
+        <p>Every course is broken into well-defined modules so you can learn at your own pace and track progress precisely.</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon">⭐</div>
+        <h3>Credit-Based System</h3>
+        <p>Earn credits with every course you complete. Credits accumulate in your Academic Bank, recognized across institutions.</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon">🛠️</div>
+        <h3>Skill Tagging</h3>
+        <p>Every course tags exactly which skills you'll develop — from Python to Public Speaking. Build a verified skill portfolio.</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon">🚪</div>
+        <h3>Multiple Entry & Exit</h3>
+        <p>Join at any academic level and exit with a Certificate, Diploma, or Degree — exactly as NEP 2020 envisions.</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon">📊</div>
+        <h3>Live Progress Tracking</h3>
+        <p>Real-time progress bars, completion metrics, and personalized dashboards for students and faculty.</p>
+      </div>
+      <div class="feature-card glass">
+        <div class="feature-icon">🏆</div>
+        <h3>10-Point Grading Scale</h3>
+        <p>Automatic CGPA calculation on the NEP-standard 10-point scale with O, A+, A, B+, B, C, P, F grades.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Courses ────────────────────────────────────────────────── -->
+<section id="courses" style="background: rgba(0,0,0,0.2);">
+  <div class="container">
+    <div class="section-header">
+      <div class="badge" style="display:inline-flex;margin-bottom:14px;">📖 Courses</div>
+      <h2>Explore Our <span class="text-gradient">Course Library</span></h2>
+      <p>Multidisciplinary, skill-tagged, NEP-aligned courses delivered by expert faculty.</p>
+    </div>
+    <div class="courses-grid" id="coursesGrid">
+      <div class="loading-center"><div class="spinner"></div></div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a href="register.html" class="btn btn-outline">View All Courses →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEP Section ────────────────────────────────────────────── -->
+<section id="nep" class="nep-section">
+  <div class="container">
+    <div class="nep-grid">
+      <div>
+        <div class="badge" style="display:inline-flex;margin-bottom:20px;">🇮🇳 NEP 2020 Compliance</div>
+        <h2 style="font-size:2.2rem;margin-bottom:16px;">Built Ground-Up for <span class="text-gradient">NEP 2020</span></h2>
+        <p style="color:var(--text-secondary);margin-bottom:36px;">Every feature maps directly to a National Education Policy requirement — from Academic Bank of Credits to multidisciplinary learning.</p>
+        <div class="nep-items">
+          <div class="nep-item">
+            <div class="nep-item-icon">🏦</div>
+            <div><h4>Academic Bank of Credits (ABC)</h4><p>All your credits are stored digitally and transferable across recognized institutions.</p></div>
+          </div>
+          <div class="nep-item">
+            <div class="nep-item-icon">🔀</div>
+            <div><h4>Multidisciplinary Learning</h4><p>Choose from core, elective, vocational, and ability-enhancement courses across disciplines.</p></div>
+          </div>
+          <div class="nep-item">
+            <div class="nep-item-icon">🎯</div>
+            <div><h4>Outcome-Based Education</h4><p>Each course defines clear learning outcomes and skills — not just content coverage.</p></div>
+          </div>
+          <div class="nep-item">
+            <div class="nep-item-icon">📜</div>
+            <div><h4>Flexible Qualifications</h4><p>Exit with a Certificate (1yr), Diploma (2yr), Degree (3yr), or PG — your choice.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="nep-visual">
+        <div class="nep-card-main glass">
+          <h3>🎓 Your Academic Progress</h3>
+          <div class="progress-item">
+            <div class="progress-label"><span>Credits Earned</span><span>72 / 120</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Courses Completed</span><span>8 / 15</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:53%; background:linear-gradient(135deg,#06b6d4,#10b981)"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Skills Acquired</span><span>12</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%; background:linear-gradient(135deg,#f59e0b,#ef4444)"></div></div>
+          </div>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><div style="font-size:0.8rem;color:var(--text-muted)">Current CGPA</div><div style="font-size:2rem;font-family:'Outfit',sans-serif;font-weight:700;" class="text-gradient">8.4</div></div>
+              <div><div style="font-size:0.8rem;color:var(--text-muted)">Exit Level</div><div style="font-size:1.1rem;font-weight:700;color:var(--secondary)">Degree</div></div>
+              <div><div style="font-size:0.8rem;color:var(--text-muted)">ABC ID</div><div style="font-size:0.9rem;font-weight:700;color:var(--accent)">ABC-2024</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────── -->
+<section class="cta-section" id="about">
+  <div class="container">
+    <div class="cta-box">
+      <div class="badge" style="display:inline-flex;margin-bottom:20px;">🚀 Join EduLearn</div>
+      <h2>Start Your NEP Journey <span class="text-gradient">Today</span></h2>
+      <p>Join thousands of students learning smarter with credits, skills, and flexible qualifications.</p>
+      <div class="cta-actions">
+        <a href="register.html" class="btn btn-primary btn-lg">Register as Student</a>
+        <a href="register.html" class="btn btn-outline btn-lg">Join as Faculty</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="flex gap-2"><div class="navbar-logo">🎓</div><span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem;">EduLearn</span></div>
+        <p>India's premier NEP 2020 aligned learning platform for credit-based, skill-focused, modular education.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#courses">Browse Courses</a></li>
+          <li><a href="register.html">Enroll Now</a></li>
+          <li><a href="login.html">Faculty Login</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>NEP Features</h4>
+        <ul>
+          <li><a href="#nep">Credit System</a></li>
+          <li><a href="#nep">Academic Bank</a></li>
+          <li><a href="#nep">Skill Tags</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 EduLearn. NEP 2020 Aligned Learning Platform.</p>
+      <p style="color:var(--text-muted);font-size:0.8rem;">Built with Node.js · Express · MongoDB</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+  // Update nav if logged in
+  const user = getUser();
+  if (user) {
+    const actions = document.getElementById('navActions');
+    const dest = user.role === 'student' ? 'dashboard.html' : 'faculty.html';
+    actions.innerHTML = `
+      <a href="${dest}" class="btn btn-ghost">Dashboard</a>
+      <button class="btn btn-outline btn-sm" onclick="clearAuth();location.reload()">Logout</button>`;
+  }
+
+  // Load courses from API
+  async function loadCourses() {
+    const grid = document.getElementById('coursesGrid');
+    try {
+      const data = await Courses.list('limit=6&page=1');
+      if (!data.data || data.data.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">
+          <p style="font-size:2rem">📚</p><p>No courses yet. <a href="login.html" style="color:var(--primary-light)">Login as Faculty</a> to create one.</p></div>`;
+        return;
+      }
+      document.getElementById('statCourses').textContent = data.total || data.data.length;
+      grid.innerHTML = data.data.map(c => `
+        <div class="course-card glass">
+          <div class="course-header">
+            <span class="course-category">${c.category || 'core'}</span>
+            <span class="course-credits">⭐ ${c.credits} Credits</span>
+          </div>
+          <h3>${c.name}</h3>
+          <p>${c.description}</p>
+          <div class="course-skills">${(c.skills||[]).slice(0,3).map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div>
+          <div class="course-footer">
+            <div class="faculty-name">
+              <div class="faculty-avatar">${(c.faculty?.name||'?')[0]}</div>
+              ${c.faculty?.name || 'Faculty'}
+            </div>
+            <a href="login.html" class="btn btn-primary btn-sm">Enroll →</a>
+          </div>
+        </div>`).join('');
+    } catch {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">
+        <p>⚠️ Backend not connected. Start the server to see live courses.</p>
+        <pre style="margin-top:12px;font-size:0.78rem;color:var(--text-muted)">cd edulearn-backend && npm run dev</pre></div>`;
+    }
+  }
+
+  // Animate stats
+  document.getElementById('statStudents').textContent = '500+';
+  loadCourses();
+</script>
+</body>
+</html>
